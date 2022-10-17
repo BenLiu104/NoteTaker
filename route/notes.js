@@ -24,7 +24,8 @@ notes.post("/", (req, res) => {
     const data = { title, text, id };
 
     readAndAppend(data, "./db/db.json");
-    setTimeout(() => { res.json(data) }, 100);
+    res.json(data)
+
 
 })
 
@@ -43,7 +44,8 @@ notes.delete("/:id", (req, res) => {
             );
         }
     })
-    setTimeout(() => { res.json("deleted") }, 100);
+
+    res.json("deleted");
 
 })
 
