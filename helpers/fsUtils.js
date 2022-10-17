@@ -35,4 +35,18 @@ const readAndAppend = (content, file) => {
   });
 };
 
-module.exports = { readFromFile, writeToFile, readAndAppend };
+/**
+ * 
+ * @param {object} content The content you want to append to the file.
+ * @param {string} file The path to the file you want to save to.
+ * @param {callback} cb The call back function
+ */
+const readAndAppendCallback = (content, file, cb) => {
+  let raw = fs.readFileSync(file)
+  const parsedData = JSON.parse(raw);
+  parsedData.push(content);
+  fs.writeFile("./db/db.json", JSON.stringify(parsedData), (err) => err ? console.error(err) : cb());
+};
+
+
+module.exports = { readFromFile, writeToFile, readAndAppend, readAndAppendCallback };

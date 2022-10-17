@@ -1,6 +1,6 @@
 const notes = require("express").Router();
 const uuid = require("uuid");
-const { readAndAppend, readFromFile } = require("../helpers/fsUtils");
+const { readFromFile, readAndAppendCallback } = require("../helpers/fsUtils");
 const fs = require("fs");
 
 
@@ -22,10 +22,7 @@ notes.post("/", (req, res) => {
     const { title, text } = req.body;
     const id = uuid.v4();
     const data = { title, text, id };
-
-    readAndAppend(data, "./db/db.json");
-    res.json(data)
-
+    readAndAppendCallback(data, "./db/db.json", () => res.json(data));
 
 })
 
@@ -36,16 +33,14 @@ notes.delete("/:id", (req, res) => {
         if (err) {
             console.error(err);
         } else {
-
             let Data = JSON.parse(data);
+            //remove the delete target from the array and return new array;
             const newData = Data.filter((obj) => obj.id != id)
             fs.writeFile("./db/db.json", JSON.stringify(newData, null, 4), (err) =>
-                err ? console.error(err) : console.info(`some data deleted`)
+                err ? console.error(err) : res.json("deleted")
             );
         }
     })
-
-    res.json("deleted");
 
 })
 
